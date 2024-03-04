@@ -49,3 +49,17 @@ searchbtn.on("click", function() {
     searchHistory.unshift(location); // Add current search to the beginning of the history
     displaySearchHistory(); // Display updated search history
 });
+// Function to display search history
+function displaySearchHistory() {
+    var historyList = $("#search-history ul");
+    historyList.empty(); // Clear previous history
+
+    searchHistory.forEach((search, index) => {
+        var listItem = $(`<li>${index + 1}. ${search}</li>`);
+        listItem.on("click", function() {
+            locationinput.val(search); // Set the search input value to the clicked item
+            searchbtn.click(); // Trigger the search button click event
+        });
+        historyList.append(listItem);
+    });
+}
