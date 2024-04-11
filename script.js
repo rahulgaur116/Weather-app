@@ -10,37 +10,46 @@ var fifthday = $("#day-five");
 var forecastDays = [firstday, secondday, thirdday, forthday, fifthday];
 var searchHistory = [];
 
-// Function to display search history
-function displaySearchHistory() {
-    var historyList = $("#search-history");
-    historyList.empty(); // Clear previous history
-
-    searchHistory.forEach((search, index) => {
-        historyList.append(`<li>${index + 1}. ${search}</li>`);
-    });
-}
-
 // Event listener for search button click
 searchbtn.on("click", function() {
     var location = locationinput.val();
 
-    // Fetch current weather data
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${myapikey}&units=imperial`)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        presentday.html(`<p>${data.name} - Temp:${data.main.temp}°F - ${data.wind.speed} MPH</p>`);
-    });
+   // Function to display weather data with emojis
+function displayWeatherData(data) {
+    presentday.html(`<p>Temperature: ${data.main.temp}°F 🔥 - Wind Speed: ${data.wind.speed} MPH 🌬️ - Humidity: ${data.main.humidity}% 💧</p>`);
 
-    // Fetch forecast weather data
-    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${myapikey}&units=imperial`)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        for (let i = 0; i < forecastDays.length; i++) {
-            forecastDays[i].html(`<p>${data.city.name} - Temp:${data.list[i*8+3].main.temp}°F - Wind:${data.list[i*8+3].wind.speed} MPH</p>`);
-        }
-    });
+    for (let i = 0; i < forecastDays.length; i++) {
+        forecastDays[i].html(`<p>Temperature: ${data.list[i*8+3].main.temp}°F 🔥 - Wind Speed: ${data.list[i*8+3].wind.speed} MPH 🌬️ - Humidity: ${data.list[i*8+3].main.humidity}% 💧</p>`);
+    }
+}
+// Function to display the current date
+function displayCurrentDate() {
+    const currentDate = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = currentDate.toLocaleDateString('en-US', options);
+
+    $('#current-date').text(formattedDate);
+}
+
+// Display the current date when the page loads
+displayCurrentDate();
+// Fetch current weather data
+fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${myapikey}&units=imperial`)
+.then(response => response.json())
+.then(data => {
+    console.log(data);
+    displayWeatherData(data);
+});
+
+// Fetch forecast weather data
+fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${myapikey}&units=imperial`)
+.then(response => response.json())
+.then(data => {
+    console.log(data);
+    for (let i = 0; i < forecastDays.length; i++) {
+        forecastDays[i].html(`<p>Temperature: ${data.list[i*8+3].main.temp}°F 🔥 - Wind Speed: ${data.list[i*8+3].wind.speed} MPH 🌬️ - Humidity: ${data.list[i*8+3].main.humidity}% 💧</p>`);
+    }
+});
 
     // Add current search to search history
     if (searchHistory.length >= 5) {
@@ -49,6 +58,7 @@ searchbtn.on("click", function() {
     searchHistory.unshift(location); // Add current search to the beginning of the history
     displaySearchHistory(); // Display updated search history
 });
+
 // Function to display search history
 function displaySearchHistory() {
     var historyList = $("#search-history ul");

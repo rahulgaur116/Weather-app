@@ -6,22 +6,19 @@
     }
     
     .forecast div {
-        width: 200px;
-        height: 200px;
         background-color: lightblue;
         text-align: center;
         line-height: 100px;
         border: 1px solid black;
-        margin: 20px;
+        font-size: 16px;
+        overflow: hidden; /* Hide content that exceeds the div */
     }
-    .forecast main {
-        width: 200px;
-        height: 200px;
-        background-color: plum;
+    #current-date {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
         text-align: center;
-        line-height: 100px;
-        border: 1px solid black;
-        margin: 20px;
     }
-
+   
    
